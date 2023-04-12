@@ -9,6 +9,7 @@ public class BuscaminasTest {
 		Nivel nivel;
 		int opcion;
 		boolean inicio = true;
+		boolean isWinner = false;
 		char continuar = 's';
 		int fila, columna;
 		boolean estaGanando = true;
@@ -43,18 +44,23 @@ public class BuscaminasTest {
 					buscaminas.generarLosCasillerosConMinas(fila, columna);
 					buscaminas.guardarLaCantidadDeBombasQueHayAlrededor(fila, columna);
 					
-					casillerosLiberados += buscaminas.liberarCasillerosAleatoriamente(fila, columna);
+					buscaminas.liberarCasillerosAleatoriamente(fila, columna);
 					inicio = false;
+					
 				}else {
 					if(!buscaminas.consultarHayMinaEn(fila,columna)) {
+						casillerosLiberados = buscaminas.obtenerCantidadDeCasillerosLiberados();
+
 						if(casillerosLiberados>=nivel.getCantidadMinimaDeCasillerosLiberados())
 							buscaminas.guardarLaCantidadDeBombasQueHayAlrededor(fila, columna);
 						
 						else {
 							
 							buscaminas.guardarLaCantidadDeBombasQueHayAlrededor(fila, columna);
-							casillerosLiberados += buscaminas.liberarCasillerosAleatoriamente(fila, columna);
+							buscaminas.liberarCasillerosAleatoriamente(fila, columna);
 						}
+						isWinner = buscaminas.consultarElEstadoDelJugador();
+
 					}else {
 						estaGanando = false;
 					}
@@ -65,13 +71,21 @@ public class BuscaminasTest {
 				System.out.println(buscaminas.mostrarTableroBack());
 				
 				
-			}while(!buscaminas.consultarHayMinaEn(fila,columna));
-			System.out.println("Perdio");
+			}while(!buscaminas.consultarHayMinaEn(fila,columna) && !isWinner);
+			
+			if(buscaminas.consultarHayMinaEn(fila,columna))
+				System.out.println("Perdiste, la próxima será ¯\\_(ツ)_/¯");
+			
+			if(isWinner)
+				System.out.println("Maravilloso! Ganaste geni@ ＼(^o^)／!!!");
+			
 			
 			
 			
 			//-----------FIN -------------------------
 			inicio = true;
+			estaGanando = true;
+			isWinner = false;
 			System.out.println("¿Desea continuar? (s/n)");
 			continuar = teclado.next().toLowerCase().charAt(0);
 			
